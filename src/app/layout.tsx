@@ -39,7 +39,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Navbar />
-            {children}
+            <div className="w-full px-10">{children}</div>
           </ThemeProvider>
         </AuthProvider>
       </body>
