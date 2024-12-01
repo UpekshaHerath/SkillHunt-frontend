@@ -66,13 +66,12 @@ export default function Navbar() {
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
-                        <button
+                        <Link
                           onClick={() => logout && logout()}
-                          className="flex items-center text-red-600"
-                        >
+                          className="flex items-center text-red-600" href={""}                        >
                           <LogOut className="mr-2 h-4 w-4" />
                           <span>Log Out</span>
-                        </button>
+                        </Link>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
