@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -19,18 +19,17 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
+import { UserType } from "@/types/UserType";
+import API from "@/utils/axiosInstance";
 
 const formSchema = z.object({
   name: z.string().min(3).max(50),
   email: z.string().email(),
-  password: z.string().min(6),
   bio: z.string().max(500).optional(),
   profilePicture: z.string().optional(),
   mobileNumber: z.string().optional(),
@@ -40,49 +39,60 @@ const formSchema = z.object({
   CV_URL: z.string().optional(),
 });
 
-// Mock user data (replace this with actual data fetching logic)
-const mockUserData = {
-  name: "John Doe",
-  email: "john@example.com",
-  password: "******", // You wouldn't actually send the password to the client
-  bio: "A passionate developer",
-  profilePicture: "/placeholder.svg?height=128&width=128",
-  mobileNumber: "+1 (555) 123-4567",
-  country: "United States",
-  city: "New York",
-  postalCode: "10001",
-  CV_URL: "https://example.com/john-doe-cv.pdf",
+const defaultUserData = {
+  name: "",
+  bio: "",
+  email: "",
+  mobileNumber: "",
+  country: "",
+  city: "",
+  postalCode: "",
+  CV_URL: "",
 };
 
 export default function UserProfileForm() {
+  const [userData, setUserData] = useState<UserType>(defaultUserData);
+  const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [avatarSrc, setAvatarSrc] = useState<string>(
-    mockUserData.profilePicture
+    "/placeholder.svg?height=128&width=128"
   );
+
+  useEffect(() => {
+    API.get("/users")
+      .then((res) => {
+        setUserData(res.data.user);
+        setAvatarSrc(res.data.user.profilePicture);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (userData) {
+      form.reset(userData);
+    }
+  }, [userData]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: mockUserData,
+    defaultValues: userData,
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Here you would typically send the form data to your backend
-    setIsEditing(false);
-  }
-
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setAvatarSrc(result);
-        form.setValue("profilePicture", result);
-      };
-      reader.readAsDataURL(file);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      console.log(values);
+      const response = await API.patch("/users", values);
+      console.log("Response from API:", response);
+      setUserData(values); // Update local state with submitted data
+      setIsEditing(false); // Exit edit mode
+    } catch (error) {
+      console.error("Error submitting form:", error);
     }
-  };
+  }
 
   const renderField = (
     label: string,
@@ -98,6 +108,10 @@ export default function UserProfileForm() {
       )}
     </div>
   );
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="container mx-auto py-10">
@@ -123,39 +137,121 @@ export default function UserProfileForm() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="flex flex-col items-center justify-center space-y-4 sm:space-y-0">
-                <div className="flex">
+              <div className="flex flex-col md:flex-row gap-6">
+                <div className="flex flex-col items-center md:items-start space-y-4">
                   <Avatar className="w-32 h-32">
                     <AvatarImage src={avatarSrc} alt="Profile picture" />
-                    <AvatarFallback>
-                      {mockUserData.name.charAt(0)}
-                    </AvatarFallback>
+                    <AvatarFallback>{userData.name.charAt(0)}</AvatarFallback>
                   </Avatar>
-                </div>
-                {isEditing && (
-                  <div className="mt-2">
-                    <Label
-                      htmlFor="avatar"
-                      className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md inline-block"
-                    >
-                      Change Profile Picture
-                    </Label>
-                    <Input
-                      id="avatar"
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleAvatarChange}
-                    />
+                  {isEditing && (
+                    <div>
+                      <Label
+                        htmlFor="avatar"
+                        className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md inline-block"
+                      >
+                        Change Picture
+                      </Label>
+                      <Input
+                        id="avatar"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                      />
+                    </div>
+                  )}
+                  <div className="w-full">
+                    {isEditing ? (
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                className="text-lg font-semibold"
+                                placeholder="Name"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    ) : (
+                      <p className="text-lg font-semibold text-center md:text-left">
+                        {userData?.name}
+                      </p>
+                    )}
                   </div>
-                )}
-                <div className="flex items-center justify-center w-full">
+                </div>
+                <div className="flex-1">
                   {renderField(
-                    "",
-                    mockUserData.name,
+                    "Bio",
+                    userData?.bio || "",
                     <FormField
                       control={form.control}
-                      name="name"
+                      name="bio"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Textarea
+                              {...field}
+                              className="min-h-[150px]"
+                              placeholder="Bio"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-6">
+                  {renderField(
+                    "Email",
+                    userData?.email,
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              {...field}
+                              placeholder="Email"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                  {renderField(
+                    "Mobile Number",
+                    userData?.mobileNumber || "",
+                    <FormField
+                      control={form.control}
+                      name="mobileNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input type="tel" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                  {renderField(
+                    "Country",
+                    userData?.country || "",
+                    <FormField
+                      control={form.control}
+                      name="country"
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
@@ -167,148 +263,56 @@ export default function UserProfileForm() {
                     />
                   )}
                 </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {renderField(
-                  "Email",
-                  mockUserData.email,
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input type="email" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-
-                {renderField(
-                  "Mobile Number",
-                  mockUserData.mobileNumber || "",
-                  <FormField
-                    control={form.control}
-                    name="mobileNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input type="tel" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-              </div>
-
-              {isEditing && (
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input type="password" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        Leave blank to keep current password
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
+                <div className="space-y-6">
+                  {renderField(
+                    "City",
+                    userData.city || "",
+                    <FormField
+                      control={form.control}
+                      name="city"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   )}
-                />
-              )}
-
-              {renderField(
-                "Bio",
-                mockUserData.bio || "",
-                <FormField
-                  control={form.control}
-                  name="bio"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Textarea {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                  {renderField(
+                    "Postal Code",
+                    userData.postalCode || "",
+                    <FormField
+                      control={form.control}
+                      name="postalCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   )}
-                />
-              )}
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {renderField(
-                  "Country",
-                  mockUserData.country || "",
-                  <FormField
-                    control={form.control}
-                    name="country"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-
-                {renderField(
-                  "City",
-                  mockUserData.city || "",
-                  <FormField
-                    control={form.control}
-                    name="city"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-
-                {renderField(
-                  "Postal Code",
-                  mockUserData.postalCode || "",
-                  <FormField
-                    control={form.control}
-                    name="postalCode"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-
-                {renderField(
-                  "CV URL",
-                  mockUserData.CV_URL || "",
-                  <FormField
-                    control={form.control}
-                    name="CV_URL"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input type="url" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
+                  {renderField(
+                    "CV URL",
+                    userData.CV_URL || "",
+                    <FormField
+                      control={form.control}
+                      name="CV_URL"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input type="url" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
               </div>
 
               {isEditing && (
