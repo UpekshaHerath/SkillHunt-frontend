@@ -1,17 +1,41 @@
-'use client'
+"use client";
 
-import JobDetails from '@/components/JobDetails';
-import JobList from '@/components/JobList';
-import { Job, jobs } from '@/data/jobs';
-import React, { useState } from 'react';
-
+import JobDetails from "@/components/JobDetails";
+import JobList from "@/components/JobList";
+import { Job } from "@/types/JobType";
+import API from "@/utils/axiosInstance";
+import React, { useEffect, useState } from "react";
 
 export default function JobListingPage() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [Loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      const res = await API.get("/jobs");
+      setJobs(res.data.jobs);
+      setLoading(false);
+    };
+    try {
+      fetchJobs();
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(jobs);
+  }, [jobs]);
 
   const handleSelectJob = (job: Job) => {
     setSelectedJob(job);
   };
+
+  if (Loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <main className="flex h-screen p-4">

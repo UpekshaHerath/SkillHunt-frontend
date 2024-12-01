@@ -1,7 +1,8 @@
 import React from 'react';
-import { Job } from '../data/jobs';
-import JobCard from './JobCard';
+
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Job } from '@/types/JobType';
+import JobCard from './JobCard';
 
 interface JobListProps {
   jobs: Job[];

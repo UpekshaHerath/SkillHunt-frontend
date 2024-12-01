@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import JobList from '../components/JobList';
 import JobDetails from '../components/JobDetails';
-import { jobs, Job } from '../data/jobs';
+import { jobs } from '../data/jobs';
+import { Job } from '@/types/JobType';
 
 export default function JobListingPage() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);

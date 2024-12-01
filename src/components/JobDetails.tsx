@@ -1,8 +1,8 @@
 import React from 'react';
-import { Job } from '../data/jobs';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Job } from '@/types/JobType';
 
 interface JobDetailsProps {
   job: Job | null;
