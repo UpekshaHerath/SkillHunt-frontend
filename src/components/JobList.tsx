@@ -16,9 +16,9 @@ const JobList: React.FC<JobListProps> = ({ jobs, selectedJobId, onSelectJob }) =
       <div className="pr-4">
         {jobs.map((job) => (
           <JobCard
-            key={job.id}
+            key={job._id}
             job={job}
-            isSelected={job.id === selectedJobId}
+            isSelected={job._id === selectedJobId}
             onClick={() => onSelectJob(job)}
           />
         ))}

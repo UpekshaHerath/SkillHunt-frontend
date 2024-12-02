@@ -68,7 +68,7 @@ export default function Navbar() {
                       <DropdownMenuItem asChild>
                         <Link
                           onClick={() => logout && logout()}
-                          className="flex items-center text-red-600" href={""}                        >
+                          className="flex items-center text-red-600" href={"/"}                        >
                           <LogOut className="mr-2 h-4 w-4" />
                           <span>Log Out</span>
                         </Link>
