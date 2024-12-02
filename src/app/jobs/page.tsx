@@ -44,7 +44,7 @@ export default function JobListingPage() {
           <h1 className="text-2xl font-bold mb-4">Job Listings</h1>
           <JobList
             jobs={jobs}
-            selectedJobId={selectedJob?.id || null}
+            selectedJobId={selectedJob?._id || null}
             onSelectJob={handleSelectJob}
           />
         </div>
