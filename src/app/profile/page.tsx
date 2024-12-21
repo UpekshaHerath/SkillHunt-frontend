@@ -26,6 +26,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { UserType } from "@/types/UserType";
 import API from "@/utils/axiosInstance";
+import { toast } from 'react-toastify';
 
 const formSchema = z.object({
   name: z.string().min(3).max(50),
@@ -87,6 +88,11 @@ export default function UserProfileForm() {
       console.log(values);
       const response = await API.patch("/users", values);
       console.log("Response from API:", response);
+      if (response.status === 200) {
+        toast.success("Profile updated successfully.");
+      } else {
+        toast.error("An error occurred while updating your profile.");
+      }
       setUserData(values); // Update local state with submitted data
       setIsEditing(false); // Exit edit mode
     } catch (error) {
@@ -323,6 +329,7 @@ export default function UserProfileForm() {
             </form>
           </Form>
         </CardContent>
+        
       </Card>
     </div>
   );

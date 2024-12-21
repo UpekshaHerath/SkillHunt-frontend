@@ -1,9 +1,14 @@
-const Home = () => {
+import React from "react";
+
+
+
+async function Home() {
   return (
-    <section>
-      <h1>Home</h1>
-    </section>
+    <div>
+     
+    </div>
   );
 };
+
 
 export default Home;
