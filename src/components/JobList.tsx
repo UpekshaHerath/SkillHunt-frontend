@@ -12,7 +12,7 @@ interface JobListProps {
 
 const JobList: React.FC<JobListProps> = ({ jobs, selectedJobId, onSelectJob }) => {
   return (
-    <ScrollArea className="h-[calc(100vh-120px)]">
+    <ScrollArea className="h-[calc(100vh-200px)]">
       <div className="pr-4">
         {jobs.map((job) => (
           <JobCard

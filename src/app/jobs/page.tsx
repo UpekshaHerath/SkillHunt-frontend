@@ -38,7 +38,7 @@ export default function JobListingPage() {
   }
 
   return (
-    <main className="flex h-screen p-4">
+    <main className="flex h-[calc(100vh-70px)] p-4">
       <div className="w-1/3 shadow-md rounded-lg overflow-hidden">
         <div className="p-4">
           <h1 className="text-2xl font-bold mb-4">Job Listings</h1>

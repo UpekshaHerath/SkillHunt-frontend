@@ -18,7 +18,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job }) => {
   }
 
   return (
-    <ScrollArea className="h-[calc(100vh-40px)]">
+    <ScrollArea>
       <Card>
         <CardHeader>
           <CardTitle>{job.position}</CardTitle>
