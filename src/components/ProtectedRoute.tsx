@@ -4,23 +4,33 @@ import { ReactNode, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';
 
-// Define the props for ProtectedRoute
 interface ProtectedRouteProps {
   children: ReactNode;
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { user } = useContext(AuthContext)!; // Non-null assertion: AuthContext is assumed to always be provided
-  console.log(user);
+  const authContext = useContext(AuthContext);
   const router = useRouter();
-  console.log(router);
 
+
+  if (!authContext) {
+    console.error('AuthContext not found. Make sure to wrap the app in AuthProvider.');
+    return null;
+  }
+
+  const { user } = authContext;
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    console.log(user);
-    if (!user) {
-      router.push('/auth/sign-in'); // Redirect to login if not authenticated
+    if (authContext.user === null) {
+      console.log('User not authenticated, redirecting to login');
+      router.push('/auth/sign-in'); 
     }
-  }, [router, user]);
+  }, [user, router, authContext.user]);
 
-  return user ? <>{children}</> : null; // Render children if user exists, otherwise render null
+  if (user === null) {
+    return <div>Loading...</div>;
+  }
+
+  return <>{children}</>;
 }

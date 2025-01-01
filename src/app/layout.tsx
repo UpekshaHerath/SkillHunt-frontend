@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar";
 import { AuthProvider } from "../context/AuthContext";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -42,6 +44,7 @@ export default function RootLayout({
             <div className="w-full px-10">{children}</div>
           </ThemeProvider>
         </AuthProvider>
+        <ToastContainer position="bottom-right" />
       </body>
     </html>
   );

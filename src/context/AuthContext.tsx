@@ -18,6 +18,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<{ token: string } | null>(null);
+  const [isInitializing, setIsInitializing] = useState(true);
   useContext(AuthContext);
 
   useEffect(() => {
@@ -27,6 +28,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser({ token });
       console.log("Set the token in the auth context")
     }
+    setIsInitializing(false);
   }, []);
 
   const login = (token: string) => {
@@ -41,7 +43,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
+      {!isInitializing && children}
     </AuthContext.Provider>
   );
 };
