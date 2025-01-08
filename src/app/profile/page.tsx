@@ -43,6 +43,7 @@ const formSchema = z.object({
 const defaultUserData = {
   name: "",
   bio: "",
+  profilePicture: "/placeholder.svg?height=128&width=128",
   email: "",
   mobileNumber: "",
   country: "",
@@ -58,6 +59,7 @@ export default function UserProfileForm() {
   const [avatarSrc, setAvatarSrc] = useState<string>(
     "/placeholder.svg?height=128&width=128"
   );
+  // const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   useEffect(() => {
     API.get("/users")
@@ -77,6 +79,17 @@ export default function UserProfileForm() {
       form.reset(userData);
     }
   }, [userData]);
+
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setAvatarPreview(reader.result as string);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
