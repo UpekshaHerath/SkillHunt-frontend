@@ -1,5 +1,5 @@
 # What is Skill hunt ? 
-This is a job posting platform which anyone can find jobs related to deferent areas. 
+This is a job posting platform specially designed for tech realated jobs. 
 
 ## Getting Started
 
