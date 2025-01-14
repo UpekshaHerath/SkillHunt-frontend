@@ -33,7 +33,7 @@ export default function Navbar() {
           <nav className="flex items-center space-x-2">
             <ModeToggle />
             <Link href="/jobs">
-              <Button>Jobs</Button>
+              <Button>My Created Jobs</Button>
             </Link>
             {user ? (
               <>

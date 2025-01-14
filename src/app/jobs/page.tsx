@@ -2,8 +2,11 @@
 
 import JobDetails from "@/components/JobDetails";
 import JobList from "@/components/JobList";
+import { Button } from "@/components/ui/button";
 import { Job } from "@/types/JobType";
 import API from "@/utils/axiosInstance";
+import Link from "next/link";
+import { BriefcaseBusiness } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 export default function JobListingPage() {
@@ -50,6 +53,12 @@ export default function JobListingPage() {
         </div>
       </div>
       <div className="w-2/3 pl-4">
+        <Link href="/jobs/new">
+          <Button className="relative flex items-center gap-2 mb-4">
+            <BriefcaseBusiness />
+            New Job
+          </Button>
+        </Link>
         <JobDetails job={selectedJob} />
       </div>
     </main>
