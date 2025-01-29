@@ -20,7 +20,7 @@ import Link from "next/link";
 import { Input } from '@/components/ui/input';
 
 export default function SignInPage() {
-  const [credentials, setCredentials] = useState<CredentialsType>({ name: '', email: '', password: '' });
+  const [credentials, setCredentials] = useState<CredentialsType>({ email: '', password: '' });
   const { login: setAuthToken } = useContext(AuthContext)!; 
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -58,17 +58,6 @@ export default function SignInPage() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Username</Label>
-            <Input
-              id="name"
-              type="name"
-              name="name"
-              placeholder="Username"
-              value={credentials.name}
-              onChange={handleChange}
-            />
-          </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
