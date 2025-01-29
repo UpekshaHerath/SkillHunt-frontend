@@ -160,7 +160,7 @@ export default function UserProfileForm() {
                 <div className="flex flex-col items-center md:items-start space-y-4">
                   <Avatar className="w-32 h-32">
                     <AvatarImage src={avatarSrc} alt="Profile picture" />
-                    <AvatarFallback>{userData.name.charAt(0)}</AvatarFallback>
+                    <AvatarFallback>{userData.email.toUpperCase().charAt(0)}</AvatarFallback>
                   </Avatar>
                   {isEditing && (
                     <div>

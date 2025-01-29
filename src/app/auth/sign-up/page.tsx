@@ -21,7 +21,6 @@ import Link from "next/link";
 
 export default function SignInPage() {
   const [credentials, setCredentials] = useState<CredentialsType>({
-    name: "",
     email: "",
     password: "",
   });
@@ -64,17 +63,6 @@ export default function SignInPage() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Username</Label>
-            <Input
-              id="name"
-              type="name"
-              name="name"
-              placeholder="Username"
-              value={credentials.name}
-              onChange={handleChange}
-            />
-          </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
