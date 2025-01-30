@@ -8,6 +8,7 @@ import API from "@/utils/axiosInstance";
 import Link from "next/link";
 import { BriefcaseBusiness } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import LoadingScreen from "@/components/loading";
 
 export default function JobListingPage() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -37,7 +38,7 @@ export default function JobListingPage() {
   };
 
   if (Loading) {
-    return <div>Loading...</div>;
+    return <LoadingScreen />;
   }
 
   return (

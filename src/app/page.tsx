@@ -1,6 +1,7 @@
 "use client";
 import JobDetails from "@/components/JobDetails";
 import JobList from "@/components/JobList";
+import LoadingScreen from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { Job } from "@/types/JobType";
 import API from "@/utils/axiosInstance";
@@ -35,7 +36,7 @@ function Home() {
   };
 
   if (Loading) {
-    return <div>Loading...</div>;
+    return <LoadingScreen />;
   }
 
   return (
