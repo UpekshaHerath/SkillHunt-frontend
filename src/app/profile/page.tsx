@@ -27,6 +27,7 @@ import { Switch } from "@/components/ui/switch";
 import { UserType } from "@/types/UserType";
 import API from "@/utils/axiosInstance";
 import { toast } from 'react-toastify';
+import LoadingScreen from "@/components/loading";
 
 const formSchema = z.object({
   name: z.string().min(3).max(50),
@@ -129,7 +130,7 @@ export default function UserProfileForm() {
   );
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <LoadingScreen />;
   }
 
   return (

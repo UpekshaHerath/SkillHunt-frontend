@@ -14,27 +14,31 @@ import {
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { LogOut, User } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const authContext = useContext(AuthContext);
   const user = authContext?.user;
   const logout = authContext?.logout;
+  const pathname = usePathname();
 
   return (
     <div className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-14 items-center px-10">
         <div className="flex">
-          <Link className="mr-6 flex items-center space-x-2" href="/jobs">
+          <Link className="mr-6 flex items-center space-x-2" href="/">
             <span className="font-bold text-xl">SkillHunt</span>
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
           <nav className="flex items-center space-x-2">
             <ModeToggle />
-            <Link href="/jobs">
-              <Button>My Created Jobs</Button>
-            </Link>
+            {(pathname !== "/jobs" && user) && (
+              <Link href="/jobs">
+                <Button>My Created Jobs</Button>
+              </Link>
+            )}
             {user ? (
               <>
                 <div className="flex items-center">
@@ -68,7 +72,9 @@ export default function Navbar() {
                       <DropdownMenuItem asChild>
                         <Link
                           onClick={() => logout && logout()}
-                          className="flex items-center text-red-600" href={"/auth/sign-in"}                        >
+                          className="flex items-center text-red-600"
+                          href={"/auth/sign-in"}
+                        >
                           <LogOut className="mr-2 h-4 w-4" />
                           <span>Log Out</span>
                         </Link>
