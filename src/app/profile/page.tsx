@@ -60,7 +60,6 @@ export default function UserProfileForm() {
   const [avatarSrc, setAvatarSrc] = useState<string>(
     "/placeholder.svg?height=128&width=128"
   );
-  // const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   useEffect(() => {
     API.get("/users")
@@ -81,17 +80,6 @@ export default function UserProfileForm() {
     }
   }, [userData]);
 
-  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setAvatarPreview(reader.result as string);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: userData,
@@ -99,9 +87,7 @@ export default function UserProfileForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values);
       const response = await API.patch("/users", values);
-      console.log("Response from API:", response);
       if (response.status === 200) {
         toast.success("Profile updated successfully.");
       } else {
