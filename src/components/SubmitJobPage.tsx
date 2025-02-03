@@ -82,9 +82,10 @@ export default function AddJobForm() {
   });
 
   const { fields, append, remove } = useFieldArray({
-    name: "requirements",
     control: form.control,
-  });
+    name: "requirements",
+  } as never);
+  
 
   const onSubmit = async (values: FormValues) => {
     console.log(values);
@@ -92,10 +93,10 @@ export default function AddJobForm() {
     console.log(response);
 
     if (response.status === 201) {
-      toast.success("Profile updated successfully.");
+      toast.success("New job added successfully");
       form.reset();
     } else {
-      toast.error("An error occurred while updating your profile.");
+      toast.error("An error occurred while job creation.");
     }
   };
 
