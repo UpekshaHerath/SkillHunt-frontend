@@ -50,7 +50,15 @@ const formSchema = z.object({
   location: z.string().min(1, "Location is required"),
   salary: z.string().min(1, "Salary is required"),
   description: z.string().min(1, "Description is required"),
-  jobType: z.enum(["full-time", "part-time", "freelance", "contract", "internship", "temporary", "remote"]),
+  jobType: z.enum([
+    "full-time",
+    "part-time",
+    "freelance",
+    "contract",
+    "internship",
+    "temporary",
+    "remote",
+  ]),
   requirements: z
     .array(z.string().min(1, "Requirement cannot be empty"))
     .min(1, "At least one requirement is needed"),
@@ -74,22 +82,22 @@ export default function AddJobForm() {
   });
 
   const { fields, append, remove } = useFieldArray({
-    name: "requirements",
     control: form.control,
-  });
+    name: "requirements",
+  } as never);
+  
 
   const onSubmit = async (values: FormValues) => {
     console.log(values);
     const response = await API.post("/jobs", values);
     console.log(response);
-    
+
     if (response.status === 201) {
-      toast.success("Profile updated successfully.");
+      toast.success("New job added successfully");
       form.reset();
     } else {
-      toast.error("An error occurred while updating your profile.");
+      toast.error("An error occurred while job creation.");
     }
-
   };
 
   return (
@@ -190,7 +198,13 @@ export default function AddJobForm() {
                       </FormControl>
                       <SelectContent>
                         {[
-                          "full-time", "part-time", "freelance", "contract", "internship", "temporary", "remote",
+                          "full-time",
+                          "part-time",
+                          "freelance",
+                          "contract",
+                          "internship",
+                          "temporary",
+                          "remote",
                         ].map((type) => (
                           <SelectItem key={type} value={type}>
                             {type.charAt(0).toUpperCase() + type.slice(1)}
