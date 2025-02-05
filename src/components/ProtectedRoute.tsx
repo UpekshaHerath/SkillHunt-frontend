@@ -3,6 +3,7 @@
 import { ReactNode, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';
+import LoadingScreen from './loading';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -29,7 +30,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   }, [user, router, authContext.user]);
 
   if (user === null) {
-    return <div>Loading...</div>;
+    return <LoadingScreen />;
   }
 
   return <>{children}</>;
