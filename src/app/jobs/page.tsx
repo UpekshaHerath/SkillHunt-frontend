@@ -9,6 +9,8 @@ import Link from "next/link";
 import { BriefcaseBusiness } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import LoadingScreen from "@/components/loading";
+import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
 export default function JobListingPage() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -17,21 +19,19 @@ export default function JobListingPage() {
 
   useEffect(() => {
     const fetchJobs = async () => {
-      const res = await API.get("/jobs");
-      setJobs(res.data.jobs);
-      setLoading(false);
+      try {
+        const res = await API.get("/jobs");
+        setJobs(res.data.jobs);
+        setLoading(false);
+      } catch (error) {
+        toast.error("An error occurred while fetching jobs.");
+        console.error(error);
+        setLoading(false);
+      }
     };
-    try {
-      fetchJobs();
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-    }
-  }, []);
 
-  useEffect(() => {
-    console.log(jobs);
-  }, [jobs]);
+    fetchJobs();
+  }, []);
 
   const handleSelectJob = (job: Job) => {
     setSelectedJob(job);
@@ -45,7 +45,17 @@ export default function JobListingPage() {
     <main className="flex h-[calc(100vh-70px)] p-4">
       <div className="w-1/3 shadow-md rounded-lg overflow-hidden">
         <div className="p-4">
-          <h1 className="text-2xl font-bold mb-4">Job Listings</h1>
+          <motion.h1
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.4,
+              scale: { type: "spring", visualDuration: 0.6, bounce: 0.5 },
+            }}
+            className="text-2xl font-bold text-center pb-8"
+          >
+            👇 My Created Jobs
+          </motion.h1>
           <JobList
             jobs={jobs}
             selectedJobId={selectedJob?._id || null}
@@ -54,8 +64,8 @@ export default function JobListingPage() {
         </div>
       </div>
       <div className="w-2/3 pl-4">
-        <Link href="/jobs/new">
-          <Button className="relative flex items-center gap-2 mb-4">
+        <Link href="/jobs/new" className="flex items-center gap-2 mb-4">
+          <Button className="flex items-center gap-2 mb-4">
             <BriefcaseBusiness />
             New Job
           </Button>

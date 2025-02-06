@@ -1,8 +1,14 @@
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Job } from '@/types/JobType';
+import React from "react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Job } from "@/types/JobType";
 
 interface JobDetailsProps {
   job: Job | null;
@@ -50,15 +56,17 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job }) => {
   );
 };
 
-function getStatusVariant(status: Job['status']): "default" | "secondary" | "destructive" | "outline" {
+function getStatusVariant(
+  status: Job["status"]
+): "default" | "secondary" | "destructive" | "outline" {
   switch (status) {
-    case 'Applied':
+    case "Applied":
       return "secondary";
-    case 'Interview':
+    case "Interview":
       return "default";
-    case 'Offer':
+    case "Offer":
       return "outline";
-    case 'Rejected':
+    case "Rejected":
       return "destructive";
     default:
       return "default";
@@ -66,4 +74,3 @@ function getStatusVariant(status: Job['status']): "default" | "secondary" | "des
 }
 
 export default JobDetails;
-
