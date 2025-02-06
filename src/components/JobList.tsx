@@ -17,7 +17,7 @@ const JobList: React.FC<JobListProps> = ({
 }) => {
   return (
     <ScrollArea className="h-[calc(100vh-200px)]">
-      <div className="p-8">
+      <div className="p-8 pt-1">
         {jobs.map((job) => (
           <JobCard
             key={job._id}

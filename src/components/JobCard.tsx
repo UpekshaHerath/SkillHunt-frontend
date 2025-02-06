@@ -21,7 +21,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, isSelected, onClick }) => {
     <motion.div whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.8 }}>
       <Card
         className={`mb-4 cursor-pointer transition-colors ${
-          isSelected ? "bg-blue-100 border-blue-500" : "hover:bg-gray-100"
+          isSelected ? "bg-gray-300 shadow-gray-700 dark:bg-gray-800 " : "hover:bg-gray-100 dark:hover:bg-gray-900"
         }`}
         onClick={onClick}
       >

@@ -26,8 +26,9 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { UserType } from "@/types/UserType";
 import API from "@/utils/axiosInstance";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import LoadingScreen from "@/components/loading";
+import { motion } from "framer-motion";
 
 const formSchema = z.object({
   name: z.string().min(3).max(50),
@@ -93,9 +94,10 @@ export default function UserProfileForm() {
       } else {
         toast.error("An error occurred while updating your profile.");
       }
-      setUserData(values); // Update local state with submitted data
-      setIsEditing(false); // Exit edit mode
+      setUserData(values);
+      setIsEditing(false);
     } catch (error) {
+      toast.error("An error occurred while updating your profile.");
       console.error("Error submitting form:", error);
     }
   }
@@ -120,7 +122,15 @@ export default function UserProfileForm() {
   }
 
   return (
-    <div className="container mx-auto py-10">
+    <motion.div
+      initial={{ opacity: 0.7, scale: 0.7 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{
+        duration: 0.3,
+        scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
+      }}
+      className="container mx-auto py-10"
+    >
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
           <div className="flex justify-between items-center">
@@ -147,7 +157,9 @@ export default function UserProfileForm() {
                 <div className="flex flex-col items-center md:items-start space-y-4">
                   <Avatar className="w-32 h-32">
                     <AvatarImage src={avatarSrc} alt="Profile picture" />
-                    <AvatarFallback>{userData.email.toUpperCase().charAt(0)}</AvatarFallback>
+                    <AvatarFallback>
+                      {userData.email.toUpperCase().charAt(0)}
+                    </AvatarFallback>
                   </Avatar>
                   {isEditing && (
                     <div>
@@ -329,8 +341,7 @@ export default function UserProfileForm() {
             </form>
           </Form>
         </CardContent>
-        
       </Card>
-    </div>
+    </motion.div>
   );
 }

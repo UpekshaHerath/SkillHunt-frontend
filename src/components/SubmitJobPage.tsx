@@ -85,23 +85,24 @@ export default function AddJobForm() {
     control: form.control,
     name: "requirements",
   } as never);
-  
 
   const onSubmit = async (values: FormValues) => {
-    console.log(values);
-    const response = await API.post("/jobs", values);
-    console.log(response);
-
-    if (response.status === 201) {
-      toast.success("New job added successfully");
-      form.reset();
-    } else {
+    try {
+      const response = await API.post("/jobs", values);
+      if (response.status === 201) {
+        toast.success("New job added successfully");
+        form.reset();
+      } else {
+        toast.error("An error occurred while job creation.");
+      }
+    } catch (error) {
       toast.error("An error occurred while job creation.");
+      console.error(error);
     }
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full max-w-2xl mx-auto my-10">
       <CardHeader>
         <CardTitle>Add New Job</CardTitle>
         <CardDescription>
@@ -298,15 +299,16 @@ export default function AddJobForm() {
                       />
                     ))}
                   </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="mt-2"
-                    onClick={() => append("")}
-                  >
-                    Add Requirement
-                  </Button>
+                  <div className="flex">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => append("")}
+                    >
+                      Add Requirement
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
